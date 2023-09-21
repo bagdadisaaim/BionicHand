@@ -6,7 +6,6 @@ import uuid
 import os
 import numpy as np
 import time
-import cvzone
 
 from google.protobuf.json_format import MessageToDict
 
