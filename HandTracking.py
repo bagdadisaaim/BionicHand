@@ -7,24 +7,31 @@ import os
 import numpy as np
 import time
 import cvzone
-
+import serial 
 from google.protobuf.json_format import MessageToDict
+import pyfirmata
+from pyfirmata import Arduino, util, SERVO
+
 
 
 cap = cv2.VideoCapture(0)
 
 mpHands = mp.solutions.hands
-hands = mpHands.Hands(max_num_hands=1)
+hands = mpHands.Hands(max_num_hands=1, min_detection_confidence=0.00001)
 mpDraw = mp.solutions.drawing_utils
-'''mySerial = cvzone.SerialObject("/dev/cu.usbmodem142301", 9600)'''
+mySerial = serial.Serial(port='COM5')
+
+#board = pyfirmata.Arduino("COM5")
+#board.digital[9].mode = SERVO
 
 prevTime = 0
 currentTime = 0
 
 while True:
+
     success, img = cap.read()
     img = cv2.flip(img, 1)
-    imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)    
     results = hands.process(imgRGB)
 
     if results.multi_hand_landmarks:
@@ -64,11 +71,19 @@ while True:
                     indexAngle = float(np.abs(indexRadians * 180.0 / np.pi))
                     if indexAngle > 180:
                         indexAngle = 360 - indexAngle
-                        print("index finger angle:", indexAngle)
-                        fingerpositions[1] = indexAngle
+                        #print("index finger angle:", int(indexAngle))
+                        fingerpositions[0] = int(indexAngle)
+                        print(fingerpositions)
+                        mySerial.write(fingerpositions)
+
+                        #board.digital[9].write(int(indexAngle))
                     else:
-                        print("index finger angle:", indexAngle)
-                        fingerpositions[1] = indexAngle
+                        #print("index finger angle:", int(indexAngle))
+                        fingerpositions[0] = int(indexAngle)
+                        print(fingerpositions)
+                        mySerial.write(fingerpositions)
+
+                        ###board.digital[9].write(int(indexAngle))
 
                     ''''
                     #middle finger
@@ -120,11 +135,6 @@ while True:
                     else:
                         print("thumb angle: ", thumbAngle1)
                     '''
-
-                    '''mySerial.sendData(fingerpositions)'''
-
-
-
 
 
 
