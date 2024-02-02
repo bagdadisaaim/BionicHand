@@ -44,7 +44,7 @@ void loop() {
     }
 
     
-    if (abs(positions[0] - lastindexpos) >= 10)
+    if (abs(positions[0] - lastindexpos) >= 5)
     {
       if (positions[0] > lastindexpos) 
       {
