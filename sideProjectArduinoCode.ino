@@ -16,7 +16,7 @@ int lastindexpos = 90;
 
 void setup() {
   // put your setup code here, to run once:
-  indexServo.attach(9);
+  indexServo.attach(8);
   Serial.begin(9600);
   
 }
@@ -43,19 +43,23 @@ void loop() {
       Serial.println(positions[i]);
     }
 
-    if (fingerpositions[0] > lastindexpos) 
+    
+    if (abs(positions[0] - lastindexpos) >= 10)
     {
-    indexServo.write(positions[0]); 
-    fingerpositions[0] = lastindexpos;
-    }
-    if (fingerpositions[0] < lastindexpos) 
-    {
-    indexServo.write(positions[180]); 
-    fingerpositions[0] = lastindexpos;
-    }
-    if (fingerpositions[0] = lastindexpos)
-    {
-      indexServo.write(positions[90]); 
+      if (positions[0] > lastindexpos) 
+      {
+      indexServo.write(180); 
+      delay(1000);
+      indexServo.write(90); 
+      lastindexpos = positions[0];
+      }
+      if (positions[0] < lastindexpos) 
+      {
+      indexServo.write(0); 
+      delay(1000);
+      indexServo.write(90); 
+      lastindexpos = positions[0];
+      }
     }
 
 
@@ -63,5 +67,11 @@ void loop() {
     ringServo.write(positions[2]); 
     pinkyServo.write(positions[3]); 
     thumbServo.write(positions[4]); 
+
+    ///int indexPos = Serial.parseInt();
+    //indexServo.write(indexPos);
+    //delay(2000);
+    // int currentpos = indexServo.read();
+    // Serial.write(currentpos);
   }
 }
