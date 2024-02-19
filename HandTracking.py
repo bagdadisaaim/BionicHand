@@ -19,10 +19,9 @@ cap = cv2.VideoCapture(0)
 mpHands = mp.solutions.hands
 hands = mpHands.Hands(max_num_hands=1, min_detection_confidence=0.00001)
 mpDraw = mp.solutions.drawing_utils
+
 mySerial = serial.Serial(port='COM5')
 
-#board = pyfirmata.Arduino("COM5")
-#board.digital[9].mode = SERVO
 
 prevTime = 0
 currentTime = 0
@@ -61,7 +60,26 @@ while True:
                     topThumbLMK = handLMS.landmark[mpHands.HandLandmark.THUMB_TIP]
                     middleThumbLMK = handLMS.landmark[mpHands.HandLandmark.THUMB_IP]
 
-                    fingerpositions = [0,0,0,0,0]
+                    fingerpositions = "$"
+
+
+                    def findquadrant(angle):
+                        if angle >=0 and angle<= 55:
+                            return 1
+                        if angle >=56 and angle<= 165:
+                            return 2
+                        if angle >=166 and angle<= 180:
+                            return 3
+
+                        
+                    def findthumbquadrant(angle):
+                        if angle >=0 and angle<= 55:
+                            return 1
+                        if angle >=56 and angle<= 165:
+                            return 2
+                        if angle >=166 and angle<= 180:
+                            return 3
+
 
                     # calculating angle for index finger
                     indexA = np.array([float(wristLMK.x), float(wristLMK.y)])  # First coord
@@ -72,20 +90,14 @@ while True:
                     if indexAngle > 180:
                         indexAngle = 360 - indexAngle
                         #print("index finger angle:", int(indexAngle))
-                        fingerpositions[0] = int(indexAngle)
-                        print(fingerpositions)
-                        mySerial.write(fingerpositions)
-
-                        #board.digital[9].write(int(indexAngle))
+                        fingerpositions = fingerpositions + str(findquadrant(int(indexAngle)))
+                        #mySerial.write(str(fingerpositions).encode())
                     else:
                         #print("index finger angle:", int(indexAngle))
-                        fingerpositions[0] = int(indexAngle)
-                        print(fingerpositions)
-                        mySerial.write(fingerpositions)
+                        fingerpositions = fingerpositions + str(findquadrant(int(indexAngle)))
+                        #mySerial.write(str(fingerpositions).encode())
 
-                        ###board.digital[9].write(int(indexAngle))
-
-                    ''''
+                    
                     #middle finger
                     middleA = np.array([float(wristLMK.x), float(wristLMK.y)])  # First coord
                     middleB = np.array([float(bottomMiddleLMK.x), float(bottomMiddleLMK.y)])  # Second coord
@@ -94,10 +106,13 @@ while True:
                     middleAngle = float(np.abs(middleRadians * 180.0 / np.pi))
                     if middleAngle > 180:
                         middleAngle = 360 - middleAngle
-                        print("Middle finger angle:", middleAngle)
-                        #mySerial.sendData("Middle finger angle:", middleAngle)
+                        #print("middle finger angle:", int(middleAngle))
+                        fingerpositions = fingerpositions + str(findquadrant(int(middleAngle)))
+                        #mySerial.write(str(fingerpositions).encode())
                     else:
-                        print("middle finger angle:", middleAngle)
+                        #print("middle finger angle:", int(middleAngle))
+                        fingerpositions = fingerpositions + str(findquadrant(int(middleAngle)))
+                        #mySerial.write(str(fingerpositions).encode())
 
                     #ring finger
                     ringA = np.array([float(wristLMK.x), float(wristLMK.y)])  # First coord
@@ -107,9 +122,13 @@ while True:
                     ringAngle = float(np.abs(ringRadians * 180.0 / np.pi))
                     if ringAngle > 180:
                         ringAngle = 360 - ringAngle
-                        print("ring finger angle:", ringAngle)
+                        #print("ring finger angle:", int(ringAngle))
+                        fingerpositions = fingerpositions +  str(findquadrant(int(ringAngle)))
+                        #mySerial.write(str(fingerpositions).encode())
                     else:
-                        print("ring finger angle:", ringAngle)
+                        #print("ring finger angle:", int(ringAngle))
+                        fingerpositions = fingerpositions +  str(findquadrant(int(ringAngle)))
+                        #mySerial.write(str(fingerpositions).encode())
 
                     #pinky finger
                     pinkyA = np.array([float(wristLMK.x), float(wristLMK.y)])  # First coord
@@ -119,9 +138,13 @@ while True:
                     pinkyAngle = float(np.abs(pinkyRadians * 180.0 / np.pi))
                     if pinkyAngle > 180:
                         pinkyAngle = 360 - pinkyAngle
-                        print("Pinky finger angle:", pinkyAngle)
+                        #print("pinky finger angle:", int(pinkyAngle))
+                        fingerpositions = fingerpositions + str(findquadrant(int(pinkyAngle)))
+                        #mySerial.write(str(fingerpositions).encode())
                     else:
-                        print("Pinky finger angle:", pinkyAngle)
+                        #print("pinky finger angle:", int(pinkyAngle))
+                        fingerpositions = fingerpositions +  str(findquadrant(int(pinkyAngle)))
+                        #mySerial.write(str(fingerpositions).encode())
 
                     #thumb finger
                     thumbA = np.array([float(wristLMK.x), float(wristLMK.y)])  # First coord
@@ -131,14 +154,18 @@ while True:
                     thumbAngle1 = float(np.abs(thumbRadians1 * 180.0 / np.pi))
                     if thumbAngle1 > 180:
                         thumbAngle1 = 360 - thumbAngle1
-                        print("thumb angle: ", thumbAngle1)
+                        #print("thumb finger angle:", int(thumbAngle1))
+                        fingerpositions = fingerpositions + str(findthumbquadrant(int(thumbAngle1)))
+                        #mySerial.write(str(fingerpositions).encode())
                     else:
-                        print("thumb angle: ", thumbAngle1)
-                    '''
+                        #print("thumb finger angle:", int(thumbAngle1))
+                        fingerpositions = fingerpositions +  str(findthumbquadrant(int(thumbAngle1)))
+                        #mySerial.write(str(fingerpositions).encode())
 
-
-
-
+                    print(str(fingerpositions))
+                    mySerial.write(str(fingerpositions).encode())
+                    time.sleep(0.5)
+                    fingerpositions = "$"
 
 
 
