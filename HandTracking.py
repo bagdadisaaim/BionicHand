@@ -1,23 +1,16 @@
-import math
-
 import cv2
 import mediapipe as mp
-import uuid
-import os
 import numpy as np
 import time
-import cvzone
 import serial 
 from google.protobuf.json_format import MessageToDict
-import pyfirmata
-from pyfirmata import Arduino, util, SERVO
 
 
 
 cap = cv2.VideoCapture(0)
 
 mpHands = mp.solutions.hands
-hands = mpHands.Hands(max_num_hands=1, min_detection_confidence=0.00001)
+hands = mpHands.Hands(max_num_hands=1, min_detection_confidence=0.5)
 mpDraw = mp.solutions.drawing_utils
 
 mySerial = serial.Serial(port='COM5')
