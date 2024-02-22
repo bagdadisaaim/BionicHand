@@ -57,21 +57,31 @@ while True:
 
 
                     def findquadrant(angle):
-                        if angle >=0 and angle<= 55:
+                        if angle >=0 and angle<= 45:
+                            return 0
+                        if angle >=46 and angle<= 170:
                             return 1
-                        if angle >=56 and angle<= 165:
+                        if angle >=171 and angle<= 180:
                             return 2
-                        if angle >=166 and angle<= 180:
-                            return 3
 
                         
                     def findthumbquadrant(angle):
                         if angle >=0 and angle<= 55:
-                            return 1
+                            return 0
                         if angle >=56 and angle<= 165:
-                            return 2
+                            return 1
                         if angle >=166 and angle<= 180:
-                            return 3
+                            return 2
+                        
+                    def findwristangle(angle):
+                        if len(str(angle)) == 1:
+                            angle = '00' + str(angle)
+                            return(angle)
+                        elif len(str(angle)) == 2:
+                            angle = '0' + str(angle)
+                            return(angle)
+                        else:
+                            return(angle)
 
 
                     # calculating angle for index finger
@@ -154,6 +164,27 @@ while True:
                         #print("thumb finger angle:", int(thumbAngle1))
                         fingerpositions = fingerpositions +  str(findthumbquadrant(int(thumbAngle1)))
                         #mySerial.write(str(fingerpositions).encode())
+
+                    #wrist rotation around y axis
+                        
+                    palm1 = handLMS.landmark[mpHands.HandLandmark.PINKY_MCP]
+                    palm2 = handLMS.landmark[mpHands.HandLandmark.INDEX_FINGER_MCP]
+                    palm3 = handLMS.landmark[mpHands.HandLandmark.PINKY_MCP]
+                    palmA = np.array([float(palm1.x), float(palm1.z)])
+                    palmB = np.array([float(palm2.x), float(palm2.z)])
+                    palmC = np.array([float(palm3.x + 1), float(palm3.z)])
+
+                    palmRadians = np.arctan2(palmC[1] - palmB[1], palmC[0] - palmB[0]) - np.arctan2(palmA[1] - palmB[1], palmA[0] - palmB[0])
+                    palmAngle = float(np.abs(palmRadians * 180.0 / np.pi))
+
+                    if palmAngle > 180 and palmAngle <= 270:
+                        palmAngle = 360 - palmAngle
+                        fingerpositions = fingerpositions + str(findwristangle(int(palmAngle)))
+                    elif  palmAngle < 0 and palmAngle > 270:
+                        palmAngle = 360 - palmAngle
+                        fingerpositions = fingerpositions + str(findwristangle(int(palmAngle)))
+                    else :
+                        fingerpositions = fingerpositions + str(findwristangle(int(palmAngle)))
 
                     print(str(fingerpositions))
                     mySerial.write(str(fingerpositions).encode())
