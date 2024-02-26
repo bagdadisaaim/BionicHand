@@ -21,14 +21,21 @@ int prevVals[numOfValsRec] = {2,2,2,2,2,0,0,0};
 
 LiquidCrystal lcd(2, 3, 4, 5, 6, 7);
 
+int indexSpinTime = 500;
+int middleSpinTime = 600;
+int ringSpinTime = 500;
+int pinkySpinTime = 500;
+int thumbSpinTime = 500;
+
+int indexCloseSpinTime = 375;
+int middleCloseSpinTime = 375;
+int ringCloseSpinTime = 500;
+int pinkyCloseSpinTime = 325;
+int thumbCloseSpinTime = 300;
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  servoThumb.attach(12);
-  servoIndex.attach(8);
-  servoMiddle.attach(9);
-  servoRing.attach(10);
-  servoPinky.attach(11);
   servoWrist.attach(13);
   lcd.begin(4,32);
 }
@@ -66,32 +73,36 @@ void loop() {
   // put your main code here, to run repeatedly:
   receiveData();
 
-    if ((valsRec[0] != prevVals[0]) | (valsRec[1] != prevVals[1]) | (valsRec[2] != prevVals[2]) | (valsRec[3] != prevVals[3]) | (valsRec[4] != prevVals[4]))
-        {
-          lcd.clear();
-          for (int i = 0; i<6; i++)
-          {
-            lcd.print(valsRec[i]);
-            lcd.print(",");
-          }
-        }
+    // if ((valsRec[0] != prevVals[0]) | (valsRec[1] != prevVals[1]) | (valsRec[2] != prevVals[2]) | (valsRec[3] != prevVals[3]) | (valsRec[4] != prevVals[4]))
+    //     {
+    //       lcd.clear();
+    //       for (int i = 0; i<6; i++)
+    //       {
+    //         lcd.print(valsRec[i]);
+    //         lcd.print(",");
+    //       }
+    //     }
 
 
   if (valsRec[0] != prevVals[0])
     {
       if (valsRec[0] - prevVals[0] > 0) 
       {
+        servoIndex.attach(8);
         servoIndex.write(180);
-        delay(abs(valsRec[0] - prevVals[0]) * 450);
+        delay(abs(valsRec[0] - prevVals[0]) * indexCloseSpinTime);
         servoIndex.write(90);
         prevVals[0] = valsRec[0];
+        servoIndex.detach();
       }
       if (valsRec[0] - prevVals[0] < 0) 
       {
+        servoIndex.attach(8);
         servoIndex.write(0);
-        delay(abs(valsRec[0] - prevVals[0])*450);
+        delay(abs(valsRec[0] - prevVals[0])*indexSpinTime);
         servoIndex.write(90);
         prevVals[0] = valsRec[0];
+        servoIndex.detach();
       }
     }
 
@@ -99,17 +110,21 @@ void loop() {
     {
       if (valsRec[1] - prevVals[1] > 0) 
       {
+        servoMiddle.attach(7);
         servoMiddle.write(180);
-        delay(abs(valsRec[1] - prevVals[1]) * 500);
+        delay(abs(valsRec[1] - prevVals[1]) * middleCloseSpinTime);
         servoMiddle.write(90);
         prevVals[1] = valsRec[1];
+        servoMiddle.detach();
       }
       if (valsRec[1] - prevVals[1] < 0) 
       {
+        servoMiddle.attach(7);
         servoMiddle.write(0);
-        delay(abs(valsRec[1] - prevVals[1])*500);
+        delay(abs(valsRec[1] - prevVals[1])*middleSpinTime);
         servoMiddle.write(90);
         prevVals[1] = valsRec[1];
+        servoMiddle.detach();
       }
     }
 
@@ -117,17 +132,21 @@ void loop() {
     {
       if (valsRec[2] - prevVals[2] > 0) 
       {
+        servoRing.attach(10);
         servoRing.write(180);
-        delay(abs(valsRec[2] - prevVals[2]) * 500);
+        delay(abs(valsRec[2] - prevVals[2]) * ringCloseSpinTime);
         servoRing.write(90);
         prevVals[2] = valsRec[2];
+        servoRing.detach();
       }
       if (valsRec[2] - prevVals[2] < 0) 
       {
+        servoRing.attach(10);
         servoRing.write(0);
-        delay(abs(valsRec[2] - prevVals[2])*500);
+        delay(abs(valsRec[2] - prevVals[2]) * ringSpinTime);
         servoRing.write(90);
         prevVals[2] = valsRec[2];
+        servoRing.detach();
       }
     }
 
@@ -135,17 +154,21 @@ void loop() {
     {
       if (valsRec[3] - prevVals[3] > 0) 
       {
+        servoPinky.attach(11);
         servoPinky.write(180);
-        delay(abs(valsRec[3] - prevVals[3]) * 500);
+        delay(abs(valsRec[3] - prevVals[3]) * pinkyCloseSpinTime);
         servoPinky.write(90);
         prevVals[3] = valsRec[3];
+        servoPinky.detach();
       }
       if (valsRec[3] - prevVals[3] < 0) 
       {
+        servoPinky.attach(11);
         servoPinky.write(0);
-        delay(abs(valsRec[3] - prevVals[3])*500);
+        delay(abs(valsRec[3] - prevVals[3])*pinkySpinTime);
         servoPinky.write(90);
         prevVals[3] = valsRec[3];
+        servoPinky.detach();
       }
     }
 
@@ -153,17 +176,21 @@ void loop() {
     {
       if (valsRec[4] - prevVals[4] > 0) 
       {
+        servoThumb.attach(12);
         servoThumb.write(180);
-        delay(abs(valsRec[4] - prevVals[4]) * 500);
+        delay(abs(valsRec[4] - prevVals[4]) * thumbCloseSpinTime);
         servoThumb.write(90);
         prevVals[4] = valsRec[4];
+        servoThumb.detach();
       }
       if (valsRec[4] - prevVals[4] < 0) 
       {
+        servoThumb.attach(12);
         servoThumb.write(0);
-        delay(abs(valsRec[4] - prevVals[4])*500);
+        delay(abs(valsRec[4] - prevVals[4])*thumbSpinTime);
         servoThumb.write(90);
         prevVals[4] = valsRec[4];
+        servoThumb.detach();
       }
     }
 
