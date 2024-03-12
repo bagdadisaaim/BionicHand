@@ -1,7 +1,6 @@
-#include <Servo.h>    //imports servo library
+#include <Servo.h>           //imports servo library
 #include <LiquidCrystal.h>   //imprts LCD library
-#include <time.h> 
-#include <Chrono.h>
+#include <Chrono.h>          //imports chrono library
 
 #define numOfValsRec 8
 #define digitsPerValRec 1
@@ -12,7 +11,6 @@ Servo servoMiddle;
 Servo servoRing;
 Servo servoPinky;
 Servo servoWrist;
-
 
 int valsRec[numOfValsRec];
 int stringLength = numOfValsRec * digitsPerValRec + 1; //$00000
@@ -40,10 +38,6 @@ int middleShouldSpinFor;
 int ringShouldSpinFor;
 int pinkyShouldSpinFor;
 int thumbShouldSpinFor;
-
-
-double indexseconds;
-double middleseconds;
 
 Chrono startIndex,startMiddle,startRing,startPinky,startThumb;
 
