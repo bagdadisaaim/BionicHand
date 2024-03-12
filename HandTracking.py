@@ -57,20 +57,18 @@ while True:
 
 
                     def findquadrant(angle):
-                        if angle >=0 and angle<= 45:
+                        if angle >=0 and angle<= 90:
                             return 0
-                        if angle >=46 and angle<= 170:
-                            return 1
-                        if angle >=171 and angle<= 180:
+                        if angle >=91 and angle<= 180:
                             return 2
 
                         
                     def findthumbquadrant(angle):
-                        if angle >=0 and angle<= 55:
+                        if angle >=0 and angle<= 115:
                             return 0
-                        if angle >=56 and angle<= 165:
-                            return 1
-                        if angle >=166 and angle<= 180:
+                        if angle >=116 and angle<= 155:
+                            return 0
+                        if angle >=156 and angle<= 180:
                             return 2
                         
                     def findwristangle(angle):
